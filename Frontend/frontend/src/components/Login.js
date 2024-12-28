@@ -16,7 +16,7 @@ const Login = () => {
         saveToken(response.token);
 
       console.log("Login bem-sucedido");
-      window.location.href = "/dashboard"; // Exemplo de redirecionamento
+      window.location.href = "/dashboard"; 
     } catch (error) {
       console.log(error.message);
     }

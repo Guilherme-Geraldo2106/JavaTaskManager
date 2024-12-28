@@ -6,6 +6,7 @@ import com.JavaTaskManager.JavaTaskManager.Dto.TaskResponseModel;
 import com.JavaTaskManager.JavaTaskManager.Dto.UpdateTaskRequestModel;
 import com.JavaTaskManager.JavaTaskManager.Model.Task;
 import com.JavaTaskManager.JavaTaskManager.Service.TaskService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
