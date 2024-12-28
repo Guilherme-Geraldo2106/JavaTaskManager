@@ -1,7 +1,12 @@
 package com.JavaTaskManager.JavaTaskManager.Controller;
 
+import com.JavaTaskManager.JavaTaskManager.Config.JwtUtil;
+import com.JavaTaskManager.JavaTaskManager.Dto.CreateTaskRequestModel;
+import com.JavaTaskManager.JavaTaskManager.Dto.TaskResponseModel;
+import com.JavaTaskManager.JavaTaskManager.Dto.UpdateTaskRequestModel;
 import com.JavaTaskManager.JavaTaskManager.Model.Task;
 import com.JavaTaskManager.JavaTaskManager.Service.TaskService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,29 +17,45 @@ import java.util.List;
 public class TaskController {
 
     private final TaskService taskService;
+    private final JwtUtil jwtUtil;
 
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskService taskService, JwtUtil jwtUtil) {
         this.taskService = taskService;
+        this.jwtUtil = jwtUtil;
     }
 
     @GetMapping
-    public List<Task> getAllTasks() {
-        return taskService.getAllTasks();
+    public List<TaskResponseModel> getAllTasks(HttpServletRequest httpRequest) {
+        List<Task> tasks = taskService.getAllTasks(jwtUtil.extractUserIdFromRequestHeader(httpRequest));
+        List<TaskResponseModel> tasksResponseModel = tasks.stream().map(TaskResponseModel::new).toList();
+
+        return tasksResponseModel;
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
-        return ResponseEntity.ok(taskService.getTaskById(id));
+    public ResponseEntity<TaskResponseModel> getTaskById(@PathVariable Long id) {
+
+        Task task = taskService.getTaskById(id);
+        TaskResponseModel responseModel = new TaskResponseModel(task);
+        return ResponseEntity.ok(responseModel);
     }
 
     @PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody Task task) {
-        return ResponseEntity.ok(taskService.createTask(task));
+    public ResponseEntity<TaskResponseModel> createTask(@RequestBody CreateTaskRequestModel request, HttpServletRequest httpRequest) {
+
+        Long userId = jwtUtil.extractUserIdFromRequestHeader(httpRequest);
+
+        return ResponseEntity.ok(new TaskResponseModel(taskService.createTask(new Task(request, userId))));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
-        return ResponseEntity.ok(taskService.updateTask(id, task));
+    public ResponseEntity<TaskResponseModel> updateTask(@PathVariable Long id, @RequestBody UpdateTaskRequestModel updateTaskRequest, HttpServletRequest httpRequest) {
+
+        long userId = jwtUtil.extractUserIdFromRequestHeader(httpRequest);
+        Task taskObject = taskService.updateTask(id, new Task(updateTaskRequest, userId));
+
+        TaskResponseModel responseModel = new TaskResponseModel(taskObject);
+        return ResponseEntity.ok(responseModel);
     }
 
     @DeleteMapping("/{id}")

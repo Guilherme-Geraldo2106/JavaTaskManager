@@ -1,12 +1,29 @@
 package com.JavaTaskManager.JavaTaskManager.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.JavaTaskManager.JavaTaskManager.Dto.CreateTaskRequestModel;
+import com.JavaTaskManager.JavaTaskManager.Dto.UpdateTaskRequestModel;
+import jakarta.persistence.*;
 
 @Entity
 public class Task {
+
+    public Task(){
+
+    }
+
+    public Task(CreateTaskRequestModel createRequest, Long userId){
+        setTitle(createRequest.title());
+        setDescription(createRequest.description());
+
+        setUsuario(new Usuario(userId));
+    }
+
+    public Task(UpdateTaskRequestModel updateRequest, Long userId){
+        setTitle(updateRequest.title());
+        setDescription(updateRequest.description());
+
+        setUsuario(new Usuario(userId));
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +33,9 @@ public class Task {
     private String description;
     private boolean completed;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private Usuario usuario;
 
     public Long getId() {
         return id;
@@ -48,4 +68,8 @@ public class Task {
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
+
+    public Usuario getUsuario(){ return this.usuario;}
+
+    public void setUsuario(Usuario usuario){this.usuario = usuario;}
 }

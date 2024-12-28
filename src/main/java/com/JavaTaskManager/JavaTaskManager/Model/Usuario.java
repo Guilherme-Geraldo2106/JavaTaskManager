@@ -10,6 +10,15 @@ public class Usuario {
         this.password = password;
     }
 
+    public Usuario(Long userId){
+        this.id = userId ;
+    }
+
+    public Usuario(){
+
+    }
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,6 +1,7 @@
 package com.JavaTaskManager.JavaTaskManager.Controller;
 
-import com.JavaTaskManager.JavaTaskManager.Dto.LoginRequest;
+import com.JavaTaskManager.JavaTaskManager.Config.JwtUtil;
+import com.JavaTaskManager.JavaTaskManager.Dto.LoginRequestModel;
 import com.JavaTaskManager.JavaTaskManager.Model.Usuario;
 import com.JavaTaskManager.JavaTaskManager.Repository.UsuarioRepository;
 import jakarta.annotation.security.PermitAll;
@@ -21,17 +22,18 @@ public class UsuarioController {
 
     @PostMapping("/registrar")
     @PermitAll
-    public String registrarUsuario(@RequestBody LoginRequest usuario) {
-        // Verifica se o usuário já existe
-        if (usuarioRepository.findByUsername(usuario.getUsername()).isPresent()) {
+    public String registrarUsuario(@RequestBody LoginRequestModel usuario) {
+
+        if (usuarioRepository.findByUsername(usuario.username()).isPresent()) {
             return "Usuário já existe!";
         }
 
-       Usuario newUser = new Usuario(usuario.getUsername(), usuario.getPassword());
+        String encodedPassword = passwordEncoder.encode(usuario.password());
+
+        Usuario newUser = new Usuario(usuario.username(), encodedPassword);
 
         newUser.setRole("ROLE_USER");
 
-        // Salva o usuário no banco
         usuarioRepository.save(newUser);
         return "Usuário registrado com sucesso!";
     }

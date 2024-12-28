@@ -1,7 +1,7 @@
 package com.JavaTaskManager.JavaTaskManager.Controller;
 
 import com.JavaTaskManager.JavaTaskManager.Config.JwtUtil;
-import com.JavaTaskManager.JavaTaskManager.Dto.LoginRequest;
+import com.JavaTaskManager.JavaTaskManager.Dto.LoginRequestModel;
 import com.JavaTaskManager.JavaTaskManager.Model.Usuario;
 import com.JavaTaskManager.JavaTaskManager.Repository.UsuarioRepository;
 import jakarta.annotation.security.PermitAll;
@@ -28,15 +28,15 @@ public class AuthController {
 
     @PostMapping("/login")
     @PermitAll
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        Usuario usuario = usuarioRepository.findByUsername(request.getUsername())
+    public ResponseEntity<?> login(@RequestBody LoginRequestModel request) {
+        Usuario usuario = usuarioRepository.findByUsername(request.username())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        if (!passwordEncoder.matches(request.getPassword(), usuario.getPassword())) {
+        if (!passwordEncoder.matches(request.password(), usuario.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Senha inválida");
         }
 
-        String token = jwtUtil.generateToken(usuario.getUsername());
+        String token = jwtUtil.generateToken(usuario);
         return ResponseEntity.ok(Map.of("token", token));
     }
 }

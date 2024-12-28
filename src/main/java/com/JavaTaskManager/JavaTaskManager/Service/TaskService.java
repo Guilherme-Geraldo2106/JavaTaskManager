@@ -15,8 +15,8 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
-    public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+    public List<Task> getAllTasks(long userId) {
+        return taskRepository.findByUsuarioId(userId);
     }
 
     public Task getTaskById(Long id) {
