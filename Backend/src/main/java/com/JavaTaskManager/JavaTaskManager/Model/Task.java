@@ -21,6 +21,7 @@ public class Task {
     public Task(UpdateTaskRequestModel updateRequest, Long userId){
         setTitle(updateRequest.title());
         setDescription(updateRequest.description());
+        setCompleted(updateRequest.completed());
 
         setUsuario(new Usuario(userId));
     }

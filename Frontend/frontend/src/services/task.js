@@ -37,3 +37,21 @@ export const updateTask = async (id, updatedTask) => {
 
     return response.json();
 };
+
+export const createTask = async (createTask) => {
+    const token = localStorage.getItem("authToken");
+    const response = await fetch(`${API_URL}/tasks`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(createTask),
+    });
+
+    if (!response.ok) {
+        throw new Error("Erro ao criar tarefa.");
+    }
+
+    return response.json();
+};
