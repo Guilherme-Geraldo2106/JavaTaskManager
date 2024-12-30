@@ -14,10 +14,10 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         // Definindo o esquema de segurança
         SecurityScheme securityScheme = new SecurityScheme()
-                .name("Bearer Authentication") // Nome exibido no Swagger
+                .name("Bearer Authentication")
                 .type(SecurityScheme.Type.HTTP)
                 .scheme("bearer")
-                .bearerFormat("JWT"); // Pode ser omitido se não estiver usando JWT
+                .bearerFormat("JWT");
 
         // Adicionando os requisitos de segurança para a documentação
         return new OpenAPI()
