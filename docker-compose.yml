@@ -8,7 +8,6 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/javataskmanager
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: admin
-      ALLOWED_ORIGINS: https://javataskmanager.gsoltech.online,http://localhost:3000
     depends_on:
       - db
     networks:
